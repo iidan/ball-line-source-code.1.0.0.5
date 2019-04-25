@@ -251,11 +251,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var Enums_1 = __webpack_require__(/*! ../../objects/Enums */ 152);
+
 var EditorManager_1 = __webpack_require__(/*! ../../objects/Managers/EditorManager */ 1389);
 
 var ShopManager_1 = __webpack_require__(/*! ../../objects/Managers/ShopManager */ 1390);
-
-var Enums_1 = __webpack_require__(/*! ../../objects/Enums */ 152);
 
 var RoomManager =
 /*#__PURE__*/
@@ -362,26 +362,60 @@ function (_Phaser$GameObjects$G) {
   }, {
     key: "loadGame",
     value: function loadGame(background) {
-      if (this.Room != Enums_1.RoomsEnum.Game) {
-        this.Room = Enums_1.RoomsEnum.Game;
-        this._isPlaying = true;
-        this.setupStartLevelValues();
+      var _this2 = this;
 
-        this._OM.loadLevel();
+      var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828); //var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
 
-        this._OM.clearBallsAndCoins();
+      /*
+      var text = this._scene.add.text(0, 500 * 1, "Level 1", style);
+      this._scene.add.tween({
+          targets: text,
+           y: 250,
+           duration:2400,
+           ease: "Bounce.Out",
+           yoyo:true
+      })
+            text.alpha = 1;
+      */
 
-        this._OM.createBalls();
 
-        this._OM.createCoin();
+      sprite2.depth = 20;
+      sprite2.alpha = 0;
 
-        this._MU.setVisibleMenuUI(false);
+      this._scene.add.tween({
+        targets: sprite2,
+        alpha: 1,
+        duration: 1000,
+        onComplete: function onComplete() {
+          if (_this2.Room != Enums_1.RoomsEnum.Game) {
+            _this2.Room = Enums_1.RoomsEnum.Game;
+            _this2._isPlaying = true;
 
-        this._scene.MusTrack = this._scene.Music ? this._scene.sound.add('Track1') : null;
-        this._scene.MusTrack ? this._scene.MusTrack.play() : true;
-        this._scene.MusTrack ? this._scene.MusTrack.setLoop(true) : true;
-        background ? this.changeBackground() : true;
-      }
+            _this2.setupStartLevelValues();
+
+            _this2._OM.loadLevel();
+
+            _this2._OM.clearBallsAndCoins();
+
+            _this2._OM.createBalls();
+
+            _this2._OM.createCoin();
+
+            _this2._MU.setVisibleMenuUI(false);
+
+            _this2._scene.MusTrack = _this2._scene.Music ? _this2._scene.sound.add('Track1') : null;
+            _this2._scene.MusTrack ? _this2._scene.MusTrack.play() : true;
+            _this2._scene.MusTrack ? _this2._scene.MusTrack.setLoop(true) : true;
+            background ? _this2.changeBackground() : true;
+          }
+
+          _this2._scene.add.tween({
+            targets: sprite2,
+            alpha: 0,
+            duration: 1800
+          });
+        }
+      });
     }
   }, {
     key: "loadShop",
@@ -430,21 +464,49 @@ function (_Phaser$GameObjects$G) {
       }
     }
   }, {
+    key: "transitionAnimationBetweenLevels",
+    value: function transitionAnimationBetweenLevels() {
+      var _this3 = this;
+
+      console.log(this.LevelNumber);
+
+      var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
+
+      sprite2.depth = 20;
+      sprite2.alpha = 0;
+
+      this._scene.add.tween({
+        targets: sprite2,
+        alpha: 1,
+        duration: 1000,
+        onComplete: function onComplete() {
+          _this3.changeBackground();
+
+          _this3.updateBallInfo();
+
+          _this3._OM.loadLevel();
+
+          _this3._OM.clearBallsAndCoins();
+
+          _this3._OM.createCoin();
+
+          _this3._OM.createBalls();
+
+          _this3._scene.add.tween({
+            targets: sprite2,
+            alpha: 0,
+            duration: 1800
+          });
+        }
+      });
+    }
+  }, {
     key: "loadNewLevel",
     value: function loadNewLevel(callLevelNumber) {
       if (this._levelNumber == callLevelNumber) {
         this._levelNumber < 10 ? this._levelNumber += 1 : this._levelNumber = 1;
         this._SM.Coins += 10;
-        this.changeBackground();
-        this.updateBallInfo();
-
-        this._OM.loadLevel();
-
-        this._OM.clearBallsAndCoins();
-
-        this._OM.createCoin();
-
-        this._OM.createBalls();
+        this.transitionAnimationBetweenLevels();
       }
     } //------------------------//------------------------//
     //                  BASIC METHODS                   //
@@ -1557,6 +1619,11 @@ function (_Phaser$GameObjects$G) {
       this._path ? this._path.destroy() : true;
       this._path = new Path_1.Path(this._scene);
       return this._path;
+    }
+  }, {
+    key: "playerSetOFlocation",
+    value: function playerSetOFlocation() {
+      this._playerObject ? this._playerObject.setPos(0) : this._playerObject = new Player_1.Player(this._scene, this._ballType, 0, 0);
     } //------------------------//------------------------//
     //                  BASIC METHODS                   //
     //------------------------//------------------------//
@@ -2087,7 +2154,10 @@ function (_Phaser$GameObjects$G) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Player).call(this, scene, ''));
     _this._graphics = [];
-    _this._ball = null; //------------------------
+    _this._ball = null;
+    _this.spriteYpos = 357;
+    _this.getAngle = 0;
+    _this.checkIfShoot = false; //------------------------
 
     _this._isDestroyed = false;
     _this._scene = scene;
@@ -2149,6 +2219,8 @@ function (_Phaser$GameObjects$G) {
         this._ball.Sprite.x = this._x;
         this._ball.Sprite.y = this._y;
       }
+
+      this.spriteYpos = 357;
     }
   }, {
     key: "destroy",
@@ -2174,24 +2246,28 @@ function (_Phaser$GameObjects$G) {
       var cursor = this._scene.input.activePointer;
       var pointerRotation = Phaser.Math.Angle.Between(this._x, this._y, cursor.x + this._scene.cameras.main.scrollX, cursor.y + this._scene.cameras.main.scrollY);
       var realPointerAngle = Phaser.Math.RadToDeg(pointerRotation) + 90;
+      this.getAngle = realPointerAngle;
       return realPointerAngle;
     }
   }, {
     key: "shootBall",
     value: function shootBall(angle) {
       this._ball.Sprite.angle = angle;
+      this._sprite.an;
 
       this._scene.input.on('pointerup', function (pointer) {
         if (!this._isDestroyed) {
           if (this._RM.IsPlaying && !this._RM.IsGameOver) {
             if (this._ball != null && this._ball.Scale > .01 * this._scene.GameSpriteScale) {
-              var vec2 = this.vectorFromAngle(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90), 50);
+              var vec2 = this.vectorFromAngle(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90), 100);
+              this.animationCannon(vec2);
 
               this._particlesEmitter.emitParticleAt(this._sprite.x + vec2.x, this._sprite.y + vec2.y, 15);
 
               this._ball.shoot(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90));
 
               this._ball = null;
+              this.checkIfShoot = true;
             }
           }
         }
@@ -2333,6 +2409,20 @@ function (_Phaser$GameObjects$G) {
       this.defineManagers();
       this.createNewBall();
       this.setupParticles();
+    } // cannon tween animation: shake on shot.
+
+  }, {
+    key: "animationCannon",
+    value: function animationCannon(angle) {
+      this._scene.add.tween({
+        targets: [this._sprite, this.SpriteBack],
+        scaleX: '+=.2',
+        scaleY: '+=.2',
+        x: this._sprite.x + angle.x,
+        y: this._sprite.y + angle.y,
+        duration: 50,
+        yoyo: true
+      });
     }
   }, {
     key: "update",
@@ -2571,6 +2661,7 @@ function (_Phaser$GameObjects$G) {
     } //------------------------//------------------------//
     //                  BALLS INTERACTION               //
     //------------------------//------------------------//
+    // speed of the ball
 
   }, {
     key: "shoot",
@@ -3891,7 +3982,8 @@ function (_Phaser$Scene) {
       this.load.atlas('ComboShape', 'assets/particles/Combo/shapes.png', 'assets/particles/Combo/shapes.json');
       this.load.atlas('CannonShape', 'assets/particles/Cannon/shapes.png', 'assets/particles/Cannon/shapes.json');
       this.load.text('ComboEffect', 'assets/particles/Combo/combo.json');
-      this.load.text('CannonEffect', 'assets/particles/Cannon/cannon.json'); // Loading Music
+      this.load.text('CannonEffect', 'assets/particles/Cannon/cannon.json');
+      this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png'); // Loading Music
 
       this.load.audio('Track1', './assets/sounds/song.mp3'); // Loading Sounds
 
@@ -4380,7 +4472,13 @@ function (_Phaser$GameObjects$G) {
           "tint": 0xF2D02A
         });
         e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
-        element.animationManagment(.15, 0, 100, true);
+        element.animationManagment(.15, 0, 100, true); ////////////////shake camera on combo//////////////////
+
+        var tempvalue = 10;
+        var min = -2;
+        var max = 2;
+        _this3._scene.cameras.main.x += Math.floor(Math.random() * (max - min + 1)) + min;
+        _this3._scene.cameras.main.y += Math.floor(Math.random() * (max - min + 1)) + min; ///////////////////////////////////////////////
       });
     }
   }, {
@@ -4684,7 +4782,8 @@ __webpack_require__(/*! phaser */ 238);
 
 var PlayScene_1 = __importDefault(__webpack_require__(/*! ./scenes/PlayScene */ 1387));
 
-var Preloader_1 = __importDefault(__webpack_require__(/*! ./scenes/Preloader */ 1399));
+var Preloader_1 = __importDefault(__webpack_require__(/*! ./scenes/Preloader */ 1399)); // main painle changes
+
 
 var config = {
   type: Phaser.AUTO,
