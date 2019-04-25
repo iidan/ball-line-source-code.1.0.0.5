@@ -215,6 +215,8 @@ export class Player_Ball extends Phaser.GameObjects.GameObject {
 //------------------------//------------------------//
 //                  BALLS INTERACTION               //
 //------------------------//------------------------//
+
+    // speed of the ball
     public shoot(direction) {
         this._scene.physics.velocityFromRotation(direction, 1000 * this._scene.GameSpriteScale, this._sprite.body.velocity);
     }

@@ -1,10 +1,11 @@
-import { EditorManager }    from '../../objects/Managers/EditorManager'
-import { ShopManager }      from '../../objects/Managers/ShopManager'
-import { RoomsEnum } 		from '../../objects/Enums'
+import { RoomsEnum } from '../../objects/Enums';
+import { EditorManager } from '../../objects/Managers/EditorManager';
+import { ObjMapManager } from '../../objects/Managers/ObjMapManager';
+import { ScoreManager } from '../../objects/Managers/ScoreManager';
+import { ShopManager } from '../../objects/Managers/ShopManager';
+import { MenuUI } from '../../objects/MenuUI';
+import { Time, Tweens } from 'phaser';
 
-import { ObjMapManager } 	from '../../objects/Managers/ObjMapManager'
-import { ScoreManager } 	from '../../objects/Managers/ScoreManager'
-import { MenuUI } 			from '../../objects/MenuUI'
 
 
 export class RoomManager extends Phaser.GameObjects.GameObject {
@@ -123,24 +124,57 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
     }
 
     private loadGame(background) {
-        if (this.Room != RoomsEnum.Game) {
-            this.Room 						= RoomsEnum.Game;
-            this._isPlaying 				= true;
-            this.setupStartLevelValues();
+        var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
+        //var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+        /*
+        var text = this._scene.add.text(0, 500 * 1, "Level 1", style);
+        this._scene.add.tween({
+            targets: text,
+             y: 250,
+             duration:2400,
+             ease: "Bounce.Out",
+             yoyo:true
+    })
+    
+        text.alpha = 1;
+        */
+        sprite2.depth = 20;
+        sprite2.alpha = 0;
 
-            this._OM.loadLevel();
-            this._OM.clearBallsAndCoins();
-            this._OM.createBalls();
+        this._scene.add.tween({
+            targets: sprite2,
+            alpha: 1,
+            duration: 1000,
+            onComplete: () => {
+                if (this.Room != RoomsEnum.Game) {
+                    this.Room 						= RoomsEnum.Game;
+        
+                    this._isPlaying 				= true;
+                    this.setupStartLevelValues();
+        
+                    this._OM.loadLevel();
+                    this._OM.clearBallsAndCoins();
+                    this._OM.createBalls();
+        
+                    this._OM.createCoin();
+                    this._MU.setVisibleMenuUI(false);
+        
+                    this._scene.MusTrack            = this._scene.Music ? this._scene.sound.add('Track1') : null;
+                    this._scene.MusTrack ? this._scene.MusTrack.play()          : true;
+                    this._scene.MusTrack ? this._scene.MusTrack.setLoop(true)   : true;
+        
+                    background ? this.changeBackground() : true;
+                }
 
-            this._OM.createCoin();
-            this._MU.setVisibleMenuUI(false);
+                this._scene.add.tween({
+                    targets: sprite2,
+                    alpha: 0,
+                    duration: 1800,
+        
+                })
+            }           
+        })
 
-            this._scene.MusTrack            = this._scene.Music ? this._scene.sound.add('Track1') : null;
-            this._scene.MusTrack ? this._scene.MusTrack.play()          : true;
-            this._scene.MusTrack ? this._scene.MusTrack.setLoop(true)   : true;
-
-            background ? this.changeBackground() : true;
-        }
     }
 
     private loadShop() {
@@ -182,20 +216,47 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
         }
     }
 
+    public transitionAnimationBetweenLevels(): void {
+        console.log(this.LevelNumber );
+        var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
+
+        sprite2.depth = 20;
+        sprite2.alpha = 0;
+
+        this._scene.add.tween({
+            targets: sprite2,
+            alpha: 1,
+            duration: 1000,
+            onComplete: () => {
+                
+                this.changeBackground();
+                this.updateBallInfo();
+  
+                this._OM.loadLevel()
+                this._OM.clearBallsAndCoins();
+                this._OM.createCoin();
+                this._OM.createBalls();
+
+                this._scene.add.tween({
+                    targets: sprite2,
+                    alpha: 0,
+                    duration: 1800,
+        
+                })
+            }           
+        })
+    }
+  
+
+
     public loadNewLevel(callLevelNumber) {
         if (this._levelNumber == callLevelNumber) {
             this._levelNumber < 10 ? this._levelNumber += 1 : this._levelNumber = 1;
             this._SM.Coins += 10;
-
-            this.changeBackground();
-            this.updateBallInfo();
-
-            this._OM.loadLevel()
-            this._OM.clearBallsAndCoins();
-            this._OM.createCoin();
-            this._OM.createBalls();
+            this.transitionAnimationBetweenLevels();
         }
     }
+
 //------------------------//------------------------//
 //                  BASIC METHODS                   //
 //------------------------//------------------------//

@@ -3,6 +3,7 @@ import 'phaser';
 import MainScene from './scenes/PlayScene';
 import Preloader from './scenes/Preloader';
 
+// main painle changes
 const config ={
   type: Phaser.AUTO,
   resolution: 1, 

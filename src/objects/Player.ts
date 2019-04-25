@@ -40,6 +40,11 @@ export class Player extends Phaser.GameObjects.GameObject {
     public get Sprite() {
         return this._sprite;
     }
+
+    private spriteYpos = 357;
+    private getAngle = 0;
+    private checkIfShoot  = false;
+
 //------------------------
     private _particlesEmitter;
     public get ParticlesEmitter() {
@@ -64,6 +69,7 @@ export class Player extends Phaser.GameObjects.GameObject {
     private _OM: ObjMapManager;
     private _SM: ScoreManager;
     private _MU: MenuUI;
+
 //------------------------//------------------------//
 //                  SETUP & DESTROY                 //
 //------------------------//------------------------//
@@ -103,6 +109,7 @@ export class Player extends Phaser.GameObjects.GameObject {
             this._ball.Sprite.x         = this._x;
             this._ball.Sprite.y         = this._y;
         }
+        this.spriteYpos = 357;
     }
 
     public destroy() {
@@ -124,21 +131,24 @@ export class Player extends Phaser.GameObjects.GameObject {
         let cursor                  = this._scene.input.activePointer;
         let pointerRotation         = Phaser.Math.Angle.Between(this._x, this._y, cursor.x + this._scene.cameras.main.scrollX, cursor.y + this._scene.cameras.main.scrollY);
         let realPointerAngle        = Phaser.Math.RadToDeg(pointerRotation) + 90;
-
+        this.getAngle = realPointerAngle;
         return realPointerAngle;
     }
 
     private shootBall(angle) {
         this._ball.Sprite.angle         = angle;
+        this._sprite.an
 
         this._scene.input.on('pointerup', function(pointer) {
             if (!this._isDestroyed) {
                 if (this._RM.IsPlaying && !this._RM.IsGameOver) {
-                    if (this._ball != null && this._ball.Scale > .01 * this._scene.GameSpriteScale) {
-                        let vec2    = this.vectorFromAngle(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90), 50);
+                    if (this._ball != null && this._ball.Scale > .01 * this._scene.GameSpriteScale) {   
+                        let vec2    = this.vectorFromAngle(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90), 100);
+                        this.animationCannon(vec2);       
                         this._particlesEmitter.emitParticleAt(this._sprite.x + vec2.x, this._sprite.y + vec2.y, 15);
                         this._ball.shoot(Phaser.Math.DegToRad(this._ball.Sprite.angle - 90));
                         this._ball  = null;
+                        this.checkIfShoot = true;
                     }
                 }
             }
@@ -149,6 +159,7 @@ export class Player extends Phaser.GameObjects.GameObject {
         this.trajectoryCalculation(this._scene.input.activePointer);
         this._sprite.angle              = angle;
         this._spriteBack.angle          = angle;
+
     }
 
     private createNewBall() {
@@ -294,15 +305,28 @@ export class Player extends Phaser.GameObjects.GameObject {
         this.setupParticles();
     }
 
+    // cannon tween animation: shake on shot.
+    private animationCannon(angle): void {//aa
+        this._scene.add.tween({
+            targets: [this._sprite,this.SpriteBack],
+            scaleX: '+=.2',
+            scaleY: '+=.2',
+            x: this._sprite.x + angle.x,
+            y: this._sprite.y + angle.y,
+            duration: 50,
+            yoyo: true,
+        });
+    }
+
     public update() {
         if (!this._isDestroyed) {
             if (this._RM.IsPlaying && !this._RM.IsGameOver && this._RM.Room !== RoomsEnum.GameOver) {
                 let ang                 = this.calculatePointerAngle();
-
                 this.rotateCannon(ang);
                 (this._ball != null) ? this.shootBall(ang) : true;
             }
         }
     }
+
 
 }

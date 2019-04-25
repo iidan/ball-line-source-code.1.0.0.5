@@ -62,12 +62,12 @@ export default class Preloader extends Phaser.Scene  {
         for(let i = 1; i <= 5; i++) {
             this.load.image('Background_' + String(i), './assets/sprites/Backgrounds/bg' + String(i) +'.png');
         }
-
         // Loading Particles
         this.load.atlas('ComboShape',       'assets/particles/Combo/shapes.png', 'assets/particles/Combo/shapes.json');
         this.load.atlas('CannonShape',      'assets/particles/Cannon/shapes.png', 'assets/particles/Cannon/shapes.json');
         this.load.text('ComboEffect',       'assets/particles/Combo/combo.json');
         this.load.text('CannonEffect',      'assets/particles/Cannon/cannon.json');
+        this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png');
 
         // Loading Music
         this.load.audio('Track1',           './assets/sounds/song.mp3');

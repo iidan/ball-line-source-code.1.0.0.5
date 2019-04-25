@@ -92,8 +92,10 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 					case 'RestartIcon': 
 						if (this._RM.Room != RoomsEnum.Shop) {
 							this._scene.Sound ? this._scene.sound.play('Button') : true;
+							
 							this._RM.loadGame(false);
-						}
+						
+						}	
 						break;
 					case 'ShopIcon':
 						if (this.Room != RoomsEnum.Shop) {
@@ -573,7 +575,9 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 		this.setupUI();
 		this.timerCountSeconds();
 		this.setupTimer();
-    }
+	}
+	
+
 
     public update() {
         this.updateUI();
