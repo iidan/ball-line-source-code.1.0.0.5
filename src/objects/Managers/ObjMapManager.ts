@@ -217,6 +217,10 @@ export class ObjMapManager extends Phaser.GameObjects.GameObject {
 		this._path						= new Path(this._scene);
 		return this._path;
 	}
+
+	public playerSetOFlocation(){
+		this._playerObject ? this._playerObject.setPos(0) : this._playerObject = new Player(this._scene, this._ballType, 0, 0);
+	}
 //------------------------//------------------------//
 //                  BASIC METHODS                   //
 //------------------------//------------------------//

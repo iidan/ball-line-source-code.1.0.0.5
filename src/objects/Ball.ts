@@ -439,6 +439,13 @@ export class Ball extends Phaser.GameObjects.GameObject {
                 });
                 e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
                 element.animationManagment(.15, 0, 100, true); 
+
+                ////////////////shake camera//////////////////
+                var min = -15;
+                var max = 15;
+                this._scene.cameras.main.x+= Math.floor(Math.random() * (max - min + 1)) + min;
+                this._scene.cameras.main.y+= Math.floor(Math.random() * (max - min + 1)) + min;
+                ///////////////////////////////////////////////
             });
     }
 
