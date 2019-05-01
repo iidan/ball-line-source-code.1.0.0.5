@@ -134,7 +134,7 @@ export class Player_Ball extends Phaser.GameObjects.GameObject {
             offsetY         = (spr.height * .35) * .5;
         } else {
             spr             = this._scene.add.image(this._x, this._y, 'Bomb').setScale(0).setOrigin(.5, .64);
-            offsetY         = (spr.height * .4) * .5;
+            offsetY         = (spr.height * .4) * .1;
         }
 
         spr.depth           = 2;

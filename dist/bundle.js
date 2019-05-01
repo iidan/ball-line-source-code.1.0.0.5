@@ -364,26 +364,23 @@ function (_Phaser$GameObjects$G) {
     value: function loadGame(background) {
       var _this2 = this;
 
-      var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828); //var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+      var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
 
-      /*
-      var text = this._scene.add.text(0, 500 * 1, "Level 1", style);
-      this._scene.add.tween({
-          targets: text,
-           y: 250,
-           duration:2400,
-           ease: "Bounce.Out",
-           yoyo:true
-      })
-            text.alpha = 1;
-      */
+      var style = {
+        font: "65px Orbitron-Bold",
+        fill: "#ff0044",
+        align: "center"
+      };
 
+      var textLevel = this._scene.add.text(240, 500, "Level " + (this._levelNumber - 1), style);
 
+      textLevel.depth = 25;
+      textLevel.alpha = 0;
       sprite2.depth = 20;
       sprite2.alpha = 0;
 
       this._scene.add.tween({
-        targets: sprite2,
+        targets: [sprite2, textLevel],
         alpha: 1,
         duration: 1000,
         onComplete: function onComplete() {
@@ -410,7 +407,7 @@ function (_Phaser$GameObjects$G) {
           }
 
           _this2._scene.add.tween({
-            targets: sprite2,
+            targets: [sprite2, textLevel],
             alpha: 0,
             duration: 1800
           });
@@ -468,15 +465,23 @@ function (_Phaser$GameObjects$G) {
     value: function transitionAnimationBetweenLevels() {
       var _this3 = this;
 
-      console.log(this.LevelNumber);
-
       var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
 
+      var style = {
+        font: "65px Orbitron-Bold",
+        fill: "#ff0044",
+        align: "center"
+      };
+
+      var textLevel = this._scene.add.text(220, 500, "Level " + (this._levelNumber - 1), style);
+
+      textLevel.depth = 25;
+      textLevel.alpha = 0;
       sprite2.depth = 20;
       sprite2.alpha = 0;
 
       this._scene.add.tween({
-        targets: sprite2,
+        targets: [sprite2, textLevel],
         alpha: 1,
         duration: 1000,
         onComplete: function onComplete() {
@@ -493,7 +498,7 @@ function (_Phaser$GameObjects$G) {
           _this3._OM.createBalls();
 
           _this3._scene.add.tween({
-            targets: sprite2,
+            targets: [sprite2, textLevel],
             alpha: 0,
             duration: 1800
           });
@@ -2580,7 +2585,7 @@ function (_Phaser$GameObjects$G) {
         offsetY = spr.height * .35 * .5;
       } else {
         spr = this._scene.add.image(this._x, this._y, 'Bomb').setScale(0).setOrigin(.5, .64);
-        offsetY = spr.height * .4 * .5;
+        offsetY = spr.height * .4 * .1;
       }
 
       spr.depth = 2;
@@ -3983,7 +3988,8 @@ function (_Phaser$Scene) {
       this.load.atlas('CannonShape', 'assets/particles/Cannon/shapes.png', 'assets/particles/Cannon/shapes.json');
       this.load.text('ComboEffect', 'assets/particles/Combo/combo.json');
       this.load.text('CannonEffect', 'assets/particles/Cannon/cannon.json');
-      this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png'); // Loading Music
+      this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png');
+      this.load.image('spark', './assets/sprites/Balls/blue.png'); // Loading Music
 
       this.load.audio('Track1', './assets/sounds/song.mp3'); // Loading Sounds
 
@@ -4407,78 +4413,97 @@ function (_Phaser$GameObjects$G) {
           retArr[retArr.length - 1].NextBall.MoveBackwards = true;
         }
       }
+      /*
+      retArr.forEach(element => {
+          let e                       = element.ParticlesEmitter.createEmitter({
+              "active":true,
+              "visible":true,
+              "collideBottom":true,
+              "collideLeft":true,
+              "collideRight":true,
+              "collideTop":true,
+              "on":false,
+              "particleBringToTop":true,
+              "radial":true,
+              "frame":{"frames":["symbol_01"],"cycle":false,"quantity":0},
+              "frequency":0,
+              "gravityX":0,
+              "gravityY":0,
+              "maxParticles":10,
+              "timeScale":1,
+              "blendMode":0,
+              "accelerationX":0,
+              "accelerationY":0,
+              "alpha":{"start":1,"end":0,"ease":"Circ.easeIn"},
+              "angle":{"ease":"Sine.easeIn","min":0,"max":360},
+              "bounce":0,
+              "delay":0,
+              "lifespan":{"ease":"Quart.easeOut","min":500,"max":1000},
+              "maxVelocityX":10000,
+              "maxVelocityY":10000,
+              "moveToX":0,
+              "moveToY":0,
+              "quantity":4,
+              "rotate":{"ease":"Quad.easeIn","min":0,"max":360},
+              "scale":{"start":0,"end":4 * this._scene.GameSpriteScale,"ease":"Quad.easeOut"},
+              "speed":{"ease":"Linear","min":3,"max":100},
+              "tint": 0xF2D02A
+          });
+          
+          //e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
+          */
+
+
+      var color;
+      var temp = String(this._type) + String.fromCharCode(97 + this._index);
+
+      if (temp === "1b") {
+        color = 0x713E98;
+      } else if (temp === "1c") {
+        color = 0x29B35A;
+      }
 
       retArr.forEach(function (element) {
-        var e = element.ParticlesEmitter.createEmitter({
-          "active": true,
-          "visible": true,
-          "collideBottom": true,
-          "collideLeft": true,
-          "collideRight": true,
-          "collideTop": true,
-          "on": false,
-          "particleBringToTop": true,
-          "radial": true,
-          "frame": {
-            "frames": ["symbol_01"],
-            "cycle": false,
-            "quantity": 0
+        var emitter = _this3._scene.add.particles('spark').createEmitter({
+          blendMode: 'SCREEN',
+          scale: {
+            start: 0.35,
+            end: 0
           },
-          "frequency": 0,
-          "gravityX": 0,
-          "gravityY": 0,
-          "maxParticles": 10,
-          "timeScale": 1,
-          "blendMode": 0,
-          "accelerationX": 0,
-          "accelerationY": 0,
-          "alpha": {
-            "start": 1,
-            "end": 0,
-            "ease": "Circ.easeIn"
+          speed: {
+            min: -100,
+            max: 100
           },
-          "angle": {
-            "ease": "Sine.easeIn",
-            "min": 0,
-            "max": 360
-          },
-          "bounce": 0,
-          "delay": 0,
-          "lifespan": {
+          quantity: 4,
+          lifespan: {
             "ease": "Quart.easeOut",
             "min": 500,
             "max": 1000
           },
-          "maxVelocityX": 10000,
-          "maxVelocityY": 10000,
-          "moveToX": 0,
-          "moveToY": 0,
-          "quantity": 4,
-          "rotate": {
-            "ease": "Quad.easeIn",
-            "min": 0,
-            "max": 360
+          active: true,
+          visible: true,
+          collideBottom: true,
+          collideLeft: true,
+          collideRight: true,
+          collideTop: true,
+          on: false,
+          particleBringToTop: true,
+          angle: {
+            min: 0,
+            max: 360
           },
-          "scale": {
-            "start": 0,
-            "end": 4 * _this3._scene.GameSpriteScale,
-            "ease": "Quad.easeOut"
-          },
-          "speed": {
-            "ease": "Linear",
-            "min": 3,
-            "max": 100
-          },
-          "tint": 0xF2D02A
+          // gravityY: 800,
+          tint: color
         });
-        e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
-        element.animationManagment(.15, 0, 100, true); ////////////////shake camera on combo//////////////////
 
-        var tempvalue = 10;
-        var min = -2;
-        var max = 2;
-        _this3._scene.cameras.main.x += Math.floor(Math.random() * (max - min + 1)) + min;
-        _this3._scene.cameras.main.y += Math.floor(Math.random() * (max - min + 1)) + min; ///////////////////////////////////////////////
+        emitter.emitParticleAt(element.Sprite.x, element.Sprite.y, 150);
+        element.animationManagment(1, 0, 100, true); ////////////////shake camera on combo//////////////////
+        //  var tempvalue = 10;
+        //   var min = -2;
+        //  var max = 2;
+        //  this._scene.cameras.main.x+= Math.floor(Math.random() * (max - min + 1)) + min;
+        // this._scene.cameras.main.y+= Math.floor(Math.random() * (max - min + 1)) + min;
+        ///////////////////////////////////////////////
       });
     }
   }, {
@@ -4519,6 +4544,8 @@ function (_Phaser$GameObjects$G) {
           selfObject._RM.IsGameOver = true;
           this._scene.BallsAreStopped = false;
           selfObject._scene.Sound ? selfObject._scene.sound.play('Failed') : true;
+
+          this._scene.cameras.main.shake(500);
         }
       }
     } //------------------------//------------------------//

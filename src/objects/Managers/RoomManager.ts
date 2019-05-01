@@ -125,30 +125,22 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
 
     private loadGame(background) {
         var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
-        //var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        /*
-        var text = this._scene.add.text(0, 500 * 1, "Level 1", style);
-        this._scene.add.tween({
-            targets: text,
-             y: 250,
-             duration:2400,
-             ease: "Bounce.Out",
-             yoyo:true
-    })
-    
-        text.alpha = 1;
-        */
+        var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };    
+        var textLevel = this._scene.add.text(240, 500, "Level " + (this._levelNumber - 1), style);
+
+        textLevel.depth = 25;
+        textLevel.alpha = 0;
         sprite2.depth = 20;
         sprite2.alpha = 0;
 
         this._scene.add.tween({
-            targets: sprite2,
+            targets: [sprite2,textLevel],
             alpha: 1,
             duration: 1000,
             onComplete: () => {
                 if (this.Room != RoomsEnum.Game) {
                     this.Room 						= RoomsEnum.Game;
-        
+
                     this._isPlaying 				= true;
                     this.setupStartLevelValues();
         
@@ -167,10 +159,10 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
                 }
 
                 this._scene.add.tween({
-                    targets: sprite2,
+                    targets: [sprite2,textLevel],
                     alpha: 0,
                     duration: 1800,
-        
+
                 })
             }           
         })
@@ -217,14 +209,18 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
     }
 
     public transitionAnimationBetweenLevels(): void {
-        console.log(this.LevelNumber );
-        var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
 
+        var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
+        var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };    
+        var textLevel = this._scene.add.text(220, 500, "Level " + (this._levelNumber - 1), style);
+
+        textLevel.depth = 25;
+        textLevel.alpha = 0;
         sprite2.depth = 20;
         sprite2.alpha = 0;
 
         this._scene.add.tween({
-            targets: sprite2,
+            targets: [sprite2,textLevel],
             alpha: 1,
             duration: 1000,
             onComplete: () => {
@@ -238,7 +234,7 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
                 this._OM.createBalls();
 
                 this._scene.add.tween({
-                    targets: sprite2,
+                    targets: [sprite2,textLevel],
                     alpha: 0,
                     duration: 1800,
         

@@ -68,6 +68,8 @@ export default class Preloader extends Phaser.Scene  {
         this.load.text('ComboEffect',       'assets/particles/Combo/combo.json');
         this.load.text('CannonEffect',      'assets/particles/Cannon/cannon.json');
         this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png');
+        this.load.image('spark',             './assets/sprites/Balls/blue.png');
+
 
         // Loading Music
         this.load.audio('Track1',           './assets/sounds/song.mp3');

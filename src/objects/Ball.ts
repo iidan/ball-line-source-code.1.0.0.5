@@ -401,7 +401,7 @@ export class Ball extends Phaser.GameObjects.GameObject {
                     retArr[retArr.length - 1].NextBall.MoveBackwards    = true;
                 }
             }
-
+            /*
             retArr.forEach(element => {
                 let e                       = element.ParticlesEmitter.createEmitter({
                     "active":true,
@@ -437,16 +437,43 @@ export class Ball extends Phaser.GameObjects.GameObject {
                     "speed":{"ease":"Linear","min":3,"max":100},
                     "tint": 0xF2D02A
                 });
-                e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
-                element.animationManagment(.15, 0, 100, true); 
+                
+                //e.emitParticleAt(element.Sprite.x, element.Sprite.y, 125);
+                */
+               var color ;
+               var temp = String(this._type)+ String.fromCharCode(97 + this._index);
+         
+                if(temp === "1b"){color = 0x713E98;}
+               else if(temp === "1c"){color = 0x29B35A;}
 
-
+               retArr.forEach(element => {
+                var emitter = this._scene.add.particles('spark').createEmitter({
+                        blendMode: 'SCREEN',
+                        scale: { start: 0.35, end: 0 },
+                        speed: { min: -100, max: 100 },
+                        quantity: 4,
+                        lifespan:{"ease":"Quart.easeOut","min":500,"max":1000},
+                        active:true,
+                        visible:true,
+                        collideBottom:true,
+                        collideLeft:true,
+                        collideRight:true,
+                        collideTop:true,
+                        on:false,
+                        particleBringToTop:true,
+                        angle: { min: 0, max: 360 },
+                       // gravityY: 800,
+                        tint: color
+                });
+                
+                emitter.emitParticleAt(element.Sprite.x, element.Sprite.y, 150);
+                element.animationManagment(1, 0, 100, true); 
                 ////////////////shake camera on combo//////////////////
-                var tempvalue = 10;
-                var min = -2;
-                var max = 2;
-                this._scene.cameras.main.x+= Math.floor(Math.random() * (max - min + 1)) + min;
-                this._scene.cameras.main.y+= Math.floor(Math.random() * (max - min + 1)) + min;
+              //  var tempvalue = 10;
+             //   var min = -2;
+              //  var max = 2;
+              //  this._scene.cameras.main.x+= Math.floor(Math.random() * (max - min + 1)) + min;
+               // this._scene.cameras.main.y+= Math.floor(Math.random() * (max - min + 1)) + min;
                 ///////////////////////////////////////////////
             });
     }
@@ -485,6 +512,8 @@ export class Ball extends Phaser.GameObjects.GameObject {
                 selfObject._RM.IsGameOver     = true;
                 this._scene.BallsAreStopped   = false;
                 selfObject._scene.Sound ? selfObject._scene.sound.play('Failed') : true;
+                this._scene.cameras.main.shake(500);
+
             }
         }
     }
