@@ -442,12 +442,14 @@ export class Ball extends Phaser.GameObjects.GameObject {
                 */
                var color ;
                var temp = String(this._type)+ String.fromCharCode(97 + this._index);
-         
-                if(temp === "1b"){color = 0x713E98;}
-               else if(temp === "1c"){color = 0x29B35A;}
 
+                if(temp === "1b" || temp === "4c" || temp === "6a"){color = 0x713E98;}
+                else if(temp === "1c" || temp === "3b" || temp === "5a"){color = 0x29B35A;}
+                else if(temp === "2b" || temp === "3a" || temp === "6c"){color = 0xEF4923}
+                else if(temp === "2c" || temp === "4a" || temp === "6b"){color = 0xF061A4}
+                else if(temp === "2a" || temp === "4b" || temp === "5c"){color = 0xF6891E}
                retArr.forEach(element => {
-                var emitter = this._scene.add.particles('spark').createEmitter({
+                var emitter = this._scene.add.particles('spark1').createEmitter({
                         blendMode: 'SCREEN',
                         scale: { start: 0.35, end: 0 },
                         speed: { min: -100, max: 100 },

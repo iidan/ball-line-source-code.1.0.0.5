@@ -277,7 +277,8 @@ function (_Phaser$GameObjects$G) {
     _this._preDefinedBallSpeed = _this._constBallSpeed;
     _this._ballSpeed = _this._preDefinedBallSpeed; //------------------------
 
-    _this._levelNumber = 2; //------------------------
+    _this._levelNumber = 2;
+    _this._mainLevelNumber = 1; //------------------------
 
     _this._isPlaying = false;
     _this._isGameOver = false;
@@ -372,7 +373,7 @@ function (_Phaser$GameObjects$G) {
         align: "center"
       };
 
-      var textLevel = this._scene.add.text(240, 500, "Level " + (this._levelNumber - 1), style);
+      var textLevel = this._scene.add.text(240, 500, "Level " + this._mainLevelNumber, style);
 
       textLevel.depth = 25;
       textLevel.alpha = 0;
@@ -438,6 +439,8 @@ function (_Phaser$GameObjects$G) {
 
         this._OM.PlayerObject.destroy();
 
+        this._mainLevelNumber = 1;
+
         this._MU.setVisibleMenuUI(true);
 
         this._SM.recordScoreAndCoins();
@@ -472,8 +475,9 @@ function (_Phaser$GameObjects$G) {
         fill: "#ff0044",
         align: "center"
       };
+      this._mainLevelNumber++;
 
-      var textLevel = this._scene.add.text(220, 500, "Level " + (this._levelNumber - 1), style);
+      var textLevel = this._scene.add.text(220, 500, "Level " + this._mainLevelNumber, style);
 
       textLevel.depth = 25;
       textLevel.alpha = 0;
@@ -3989,7 +3993,9 @@ function (_Phaser$Scene) {
       this.load.text('ComboEffect', 'assets/particles/Combo/combo.json');
       this.load.text('CannonEffect', 'assets/particles/Cannon/cannon.json');
       this.load.image('blackScreen', './assets/sprites/Backgrounds/blackScreen.png');
-      this.load.image('spark', './assets/sprites/Balls/blue.png'); // Loading Music
+      this.load.image('spark1', './assets/sprites/Balls/blue.png');
+      this.load.image('spark2', './assets/sprites/Balls/green.png');
+      this.load.image('spark3', './assets/sprites/Balls/purpule2.png'); // Loading Music
 
       this.load.audio('Track1', './assets/sounds/song.mp3'); // Loading Sounds
 
@@ -4457,14 +4463,20 @@ function (_Phaser$GameObjects$G) {
       var color;
       var temp = String(this._type) + String.fromCharCode(97 + this._index);
 
-      if (temp === "1b") {
+      if (temp === "1b" || temp === "4c" || temp === "6a") {
         color = 0x713E98;
-      } else if (temp === "1c") {
+      } else if (temp === "1c" || temp === "3b" || temp === "5a") {
         color = 0x29B35A;
+      } else if (temp === "2b" || temp === "3a" || temp === "6c") {
+        color = 0xEF4923;
+      } else if (temp === "2c" || temp === "4a" || temp === "6b") {
+        color = 0xF061A4;
+      } else if (temp === "2a" || temp === "4b" || temp === "5c") {
+        color = 0xF6891E;
       }
 
       retArr.forEach(function (element) {
-        var emitter = _this3._scene.add.particles('spark').createEmitter({
+        var emitter = _this3._scene.add.particles('spark1').createEmitter({
           blendMode: 'SCREEN',
           scale: {
             start: 0.35,

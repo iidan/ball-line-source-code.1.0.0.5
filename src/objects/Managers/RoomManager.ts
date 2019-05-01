@@ -45,6 +45,7 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
 	}
 //------------------------
     private _levelNumber			    = 2;
+    private _mainLevelNumber = 1;
 	public get LevelNumber() {
 		return this._levelNumber;
     }
@@ -126,7 +127,7 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
     private loadGame(background) {
         var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
         var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };    
-        var textLevel = this._scene.add.text(240, 500, "Level " + (this._levelNumber - 1), style);
+        var textLevel = this._scene.add.text(240, 500, "Level " + (this._mainLevelNumber), style);
 
         textLevel.depth = 25;
         textLevel.alpha = 0;
@@ -187,7 +188,7 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
             this.Room 						= RoomsEnum.GameOver;
             this._isPlaying 				= false;
             this._OM.PlayerObject.destroy();
-
+            this._mainLevelNumber = 1;
             this._MU.setVisibleMenuUI(true);
             this._SM.recordScoreAndCoins();
 
@@ -211,8 +212,9 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
     public transitionAnimationBetweenLevels(): void {
 
         var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
-        var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };    
-        var textLevel = this._scene.add.text(220, 500, "Level " + (this._levelNumber - 1), style);
+        var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };  
+        this._mainLevelNumber ++;  
+        var textLevel = this._scene.add.text(220, 500, "Level " + (this._mainLevelNumber), style);
 
         textLevel.depth = 25;
         textLevel.alpha = 0;
