@@ -125,48 +125,25 @@ export class RoomManager extends Phaser.GameObjects.GameObject {
     }
 
     private loadGame(background) {
-        var sprite2 = this._scene.add.sprite(240 * 1, 600 * 1, 'blackScreen').setScale(1, .8 * 1).setOrigin(.5).setTint(0x282828);
-        var style = { font: "65px Orbitron-Bold", fill: "#ff0044", align: "center" };    
-        var textLevel = this._scene.add.text(240, 500, "Level " + (this._mainLevelNumber), style);
+        if (this.Room != RoomsEnum.Game) {
+            this.Room 						= RoomsEnum.Game;
 
-        textLevel.depth = 25;
-        textLevel.alpha = 0;
-        sprite2.depth = 20;
-        sprite2.alpha = 0;
+            this._isPlaying 				= true;
+            this.setupStartLevelValues();
 
-        this._scene.add.tween({
-            targets: [sprite2,textLevel],
-            alpha: 1,
-            duration: 1000,
-            onComplete: () => {
-                if (this.Room != RoomsEnum.Game) {
-                    this.Room 						= RoomsEnum.Game;
+            this._OM.loadLevel();
+            this._OM.clearBallsAndCoins();
+            this._OM.createBalls();
 
-                    this._isPlaying 				= true;
-                    this.setupStartLevelValues();
-        
-                    this._OM.loadLevel();
-                    this._OM.clearBallsAndCoins();
-                    this._OM.createBalls();
-        
-                    this._OM.createCoin();
-                    this._MU.setVisibleMenuUI(false);
-        
-                    this._scene.MusTrack            = this._scene.Music ? this._scene.sound.add('Track1') : null;
-                    this._scene.MusTrack ? this._scene.MusTrack.play()          : true;
-                    this._scene.MusTrack ? this._scene.MusTrack.setLoop(true)   : true;
-        
-                    background ? this.changeBackground() : true;
-                }
+            this._OM.createCoin();
+            this._MU.setVisibleMenuUI(false);
 
-                this._scene.add.tween({
-                    targets: [sprite2,textLevel],
-                    alpha: 0,
-                    duration: 1800,
+            this._scene.MusTrack            = this._scene.Music ? this._scene.sound.add('Track1') : null;
+            this._scene.MusTrack ? this._scene.MusTrack.play()          : true;
+            this._scene.MusTrack ? this._scene.MusTrack.setLoop(true)   : true;
 
-                })
-            }           
-        })
+            background ? this.changeBackground() : true;
+        }
 
     }
 

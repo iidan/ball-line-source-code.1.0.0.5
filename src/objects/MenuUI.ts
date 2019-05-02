@@ -50,8 +50,11 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 	private _timeStamp:TimeObject;
 
 	private _styleTitle				= { font: '35px Orbitron-Bold', fill: "#eddf14" };
+	private _tapToStart				= { font: '35px Orbitron-Bold', fill: "#eddf14" };
 	private _styleScore 			= { font: '35px Orbitron-Bold', fill: "#ffffff"};
 	private _styleReward			= { font: '25px Orbitron-Bold', fill: "#ffffff"};
+
+	private oneTime = true;
 //------------------------//------------------------//
 //                       SETUP                      //
 //------------------------//------------------------//
@@ -66,6 +69,7 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 			menuStroke:			this.setupMenuStroke(true),
 			rewardUI:			this.setupRewardUI(),
 
+			
 			play:           	this.setupButton('PlayIcon', .4, 240, 660),
 			restart:           	this.setupButton('RestartIcon', .4, 240, 660),
 			topCoin:          	this.setupButton('Coin', .2, 400, 30),
@@ -75,11 +79,13 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 			music:          	this.setupButton(this._scene.Music == 1 ? 'MusicOn' : 'MusicOff', .25, 238, 820),
 			
 			topText:          	this.setupText(this._styleTitle, 240, 	140, 	0xffffff, 	38, 15),
+			tapToStart:         this.setupText(this._tapToStart, 240, 	300, 	0xffffff, 	38, 15),
 			bestText:          	this.setupText(this._styleScore, 80, 	45, 	0xeddf14, 	20, 15),
 			bestScoreText:      this.setupText(this._styleScore, 80, 	75, 	0xffffff, 	28, 15),
 			scoreText:          this.setupText(this._styleScore, 240, 	60, 	0xffffff, 	48, 15),
 			coinsText:          this.setupText(this._styleScore, 400, 	75, 	0xeddf14, 	28, 15),
-        };
+		};
+		
 	}
 	
 	private setupButton(key, scale, x, y) {
@@ -91,8 +97,7 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 					case 'PlayIcon': 
 					case 'RestartIcon': 
 						if (this._RM.Room != RoomsEnum.Shop) {
-							this._scene.Sound ? this._scene.sound.play('Button') : true;
-							
+							this._scene.Sound ? this._scene.sound.play('Button') : true;							
 							this._RM.loadGame(false);
 						
 						}	
@@ -202,6 +207,8 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 		let rewardTxt						= this.setupText(this._styleReward, 414, 682, 0xffffff, 15, 17);
 		let timeTxt							= this.setupText(this._styleReward, 414, 702, 0xffffff, 15, 17);
 		let getRewardTxt					= this.setupText(this._styleReward, 414, 692, 0xffffff, 15, 17);
+
+		
 
 		backSpr.on('pointerdown', function(pointer) {
 			if (pointer.buttons === 1) {
@@ -523,6 +530,23 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
     private updateUI() {
 		this._ui.topText.setText(this._RM.Room == RoomsEnum.Menu ? 'BALL LINE' : 'GAME OVER');
 		this._ui.bestText.setText('Best');
+		this._ui.tapToStart.setText('Tap To Start');
+
+		if(this.oneTime){
+			this._ui.tapToStart.setScale(1);
+			this._scene.add.tween({
+				targets: this._ui.tapToStart,
+				scaleX:1.4,
+				scaleY:1.4,
+				duration: 1000,
+				yoyo: -1,
+				loop:-1
+			})
+			this.oneTime = false;
+		}
+
+		
+
 		this._ui.bestScoreText.setText(String(this._SM.BestScore));
 		this._ui.scoreText.setText(String(this._SM.Score));
 		this._ui.coinsText.setText(String(this._RM.Room == RoomsEnum.Game ? this._SM.Coins : this._SM.AllCoins));
