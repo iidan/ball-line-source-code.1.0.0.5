@@ -9,7 +9,7 @@ interface UI {
 	menuStroke:			Phaser.GameObjects.Image,
 	rewardUI,
 
-	restart:           	Phaser.GameObjects.Image,
+	//restart:           	Phaser.GameObjects.Image,
     play:           	Phaser.GameObjects.Image,
     sound:          	Phaser.GameObjects.Image,
 	music:          	Phaser.GameObjects.Image,
@@ -50,7 +50,7 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 	private _timeStamp:TimeObject;
 
 	private _styleTitle				= { font: '35px Orbitron-Bold', fill: "#eddf14" };
-	private _tapToStart				= { font: '35px Orbitron-Bold', fill: "#eddf14" };
+	//private _tapToStart				= { font: '35px Orbitron-Bold', fill: "#eddf14" };
 	private _styleScore 			= { font: '35px Orbitron-Bold', fill: "#ffffff"};
 	private _styleReward			= { font: '25px Orbitron-Bold', fill: "#ffffff"};
 
@@ -74,9 +74,9 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 			restart:           	this.setupButton('RestartIcon', .4, 240, 660),
 			topCoin:          	this.setupButton('Coin', .2, 400, 30),
 
-			shop:          		this.setupButton('ShopIcon', .3, 184, 820),
-			sound:          	this.setupButton(this._scene.Sound == 1 ? 'SoundOn' : 'SoundOff', .3, 300, 820),
-			music:          	this.setupButton(this._scene.Music == 1 ? 'MusicOn' : 'MusicOff', .25, 238, 820),
+			//shop:          		this.setupButton('ShopIcon', .3, 184, 820),
+			//sound:          	this.setupButton(this._scene.Sound == 1 ? 'SoundOn' : 'SoundOff', .3, 300, 820),
+			//music:          	this.setupButton(this._scene.Music == 1 ? 'MusicOn' : 'MusicOff', .25, 238, 820),
 			
 			topText:          	this.setupText(this._styleTitle, 240, 	140, 	0xffffff, 	38, 15),
 			tapToStart:         this.setupText(this._tapToStart, 240, 	300, 	0xffffff, 	38, 15),
@@ -92,16 +92,13 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 		let spr								= this.setupSprite(x, y, key, 15, true, scale)
 
 		spr.on('pointerdown', function(pointer) {
+			if (this._RM.Room != RoomsEnum.Shop) {
+				this._scene.Sound ? this._scene.sound.play('Button') : true;							
+				//this._RM.loadGame(false);
+			
+			}	
 			if (pointer.buttons === 1) {
                 switch(spr.texture.key) {
-					case 'PlayIcon': 
-					case 'RestartIcon': 
-						if (this._RM.Room != RoomsEnum.Shop) {
-							this._scene.Sound ? this._scene.sound.play('Button') : true;							
-							this._RM.loadGame(false);
-						
-						}	
-						break;
 					case 'ShopIcon':
 						if (this.Room != RoomsEnum.Shop) {
 							this._scene.Sound ? this._scene.sound.play('Button') : true;
@@ -530,8 +527,8 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
     private updateUI() {
 		this._ui.topText.setText(this._RM.Room == RoomsEnum.Menu ? 'BALL LINE' : 'GAME OVER');
 		this._ui.bestText.setText('Best');
-		this._ui.tapToStart.setText('Tap To Start');
-
+		//this._ui.tapToStart.setText('Tap To Start');
+		/*
 		if(this.oneTime){
 			this._ui.tapToStart.setScale(1);
 			this._scene.add.tween({
@@ -544,6 +541,7 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 			})
 			this.oneTime = false;
 		}
+		*/
 
 		
 
@@ -579,11 +577,11 @@ export class MenuUI extends Phaser.GameObjects.GameObject {
 		this._ui.menuStroke.visible			= v;
 
 		this._ui.play.visible				= v;
-		this._ui.restart.visible			= v;
+		//this._ui.restart.visible			= v;
 
-		this._ui.sound.visible				= v;
-		this._ui.music.visible				= v;
-		this._ui.shop.visible				= v;
+		//this._ui.sound.visible				= v;
+		//this._ui.music.visible				= v;
+		//this._ui.shop.visible				= v;
 
 		this._ui.rewardUI.back.visible		= v;
 		this._ui.rewardUI.prize.visible		= v;
